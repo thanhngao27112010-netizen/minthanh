@@ -121,6 +121,31 @@ h2::after {
   transform: scale(1.05);
 }
 </style>
+  body {
+  animation: bgMove 10s infinite alternate;
+}
+
+@keyframes bgMove {
+  0% { background: radial-gradient(circle at top, #2b2d42, #1a1b2e); }
+  100% { background: radial-gradient(circle at bottom, #1a1b2e, #2b2d42); }
+}
+
+/* Scanlines */
+body::after {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
 </head>
 
 <body>
