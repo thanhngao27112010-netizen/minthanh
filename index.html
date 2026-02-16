@@ -8,18 +8,18 @@
 <style>
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Courier New', monospace;
   background: radial-gradient(circle at top, #2b2d42, #1a1b2e);
   overflow: hidden;
-  color: white;
+  color: #cfcfff;
 }
 
-/* INTRO SCREEN */
+/* INTRO */
 .intro {
   position: fixed;
   width: 100%;
   height: 100vh;
-  background: #0d0f1a;
+  background: #0b0d18;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,9 +28,15 @@ body {
   z-index: 10;
 }
 
-.intro p {
-  opacity: 0.8;
-  margin: 5px;
+.typing {
+  border-right: 2px solid #ff4ecd;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
 }
 
 .enter-text {
@@ -39,11 +45,10 @@ body {
   font-size: 14px;
 }
 
-/* MAIN CARD */
+/* MAIN */
 .main {
   display: none;
   height: 100vh;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -55,7 +60,7 @@ body {
   border-radius: 25px;
   text-align: center;
   width: 320px;
-  box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+  box-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
 }
 
 .avatar {
@@ -72,6 +77,21 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+}
+
+h2 {
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 0;
+  color: #ff4ecd;
+  z-index: -1;
+  opacity: 0.7;
 }
 
 .bio::before {
@@ -107,11 +127,8 @@ body {
 
 <!-- INTRO -->
 <div class="intro" id="intro">
-  <h2>Accessing profile...</h2>
-  <p>User: nvm7</p>
-  <p>System: Windows 10</p>
-  <p>Status: Bio Loaded</p>
-  <div class="enter-text">Press Enter to continue</div>
+  <h2 class="typing" id="typing"></h2>
+  <div class="enter-text">Press Enter or wait...</div>
 </div>
 
 <!-- MAIN -->
@@ -121,7 +138,7 @@ body {
       <img src="https://wallpapers.com/images/hd/kakashi-pfp-no-signal-art-wvb4jpkd920auzp6.jpg">
     </div>
 
-    <h2>! nvm7</h2>
+    <h2 data-text="! nvm7">! nvm7</h2>
     <p class="bio">404 feelings not found</p>
 
     <a class="btn" href="https://www.facebook.com/profile.php?id=61572434173016" target="_blank">Facebook</a>
@@ -131,13 +148,35 @@ body {
 </div>
 
 <script>
+const text = "Accessing nvm7 profile...";
+let i = 0;
+const speed = 50;
+
+function typeWriter() {
+  if (i < text.length) {
+    document.getElementById("typing").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+typeWriter();
+
+// Enter key skip
 document.addEventListener("keydown", function(event) {
   if (event.key === "Enter") {
-    document.getElementById("intro").style.display = "none";
-    document.getElementById("main").style.display = "flex";
-    document.body.style.overflow = "auto";
+    showMain();
   }
 });
+
+// Auto after 3s
+setTimeout(showMain, 3000);
+
+function showMain() {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("main").style.display = "flex";
+  document.body.style.overflow = "auto";
+}
 </script>
 
 </body>
