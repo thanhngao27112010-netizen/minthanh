@@ -9,12 +9,12 @@
 body {
   margin: 0;
   font-family: 'Courier New', monospace;
-  background: #0a0f1f;
+  background: #070b18;
   overflow: hidden;
   color: #e0e0ff;
 }
 
-/* CYBER GRID BACKGROUND */
+/* ===== BACKGROUND GRID ===== */
 body::before {
   content: "";
   position: fixed;
@@ -23,17 +23,27 @@ body::before {
   background-image:
     linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: moveGrid 20s linear infinite;
+  background-size: 45px 45px;
+  animation: moveGrid 25s linear infinite;
   z-index: 0;
 }
 
 @keyframes moveGrid {
   from { background-position: 0 0; }
-  to { background-position: 0 40px; }
+  to { background-position: 0 45px; }
 }
 
-/* MAIN */
+/* Glow trung tâm */
+body::after {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0,255,255,0.15), transparent 60%);
+  z-index: 1;
+}
+
+/* ===== MAIN CARD ===== */
 .main {
   height: 100vh;
   display: flex;
@@ -44,40 +54,15 @@ body::before {
 }
 
 .card {
-  background: rgba(20, 20, 40, 0.85);
+  background: rgba(15, 20, 40, 0.9);
   padding: 40px;
   border-radius: 25px;
   text-align: center;
   width: 320px;
-  box-shadow: 0 0 40px rgba(0,255,255,0.3);
-  position: relative;
+  box-shadow: 0 0 40px rgba(0,255,255,0.25);
 }
 
-/* ALERT ❗ */
-.alert {
-  position: absolute;
-  top: -18px;
-  right: -18px;
-  width: 45px;
-  height: 45px;
-  background: red;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 0 20px red;
-  animation: pulse 1.2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 10px red; }
-  50% { transform: scale(1.15); box-shadow: 0 0 25px red; }
-  100% { transform: scale(1); box-shadow: 0 0 10px red; }
-}
-
+/* ===== AVATAR ===== */
 .avatar {
   width: 120px;
   height: 120px;
@@ -95,16 +80,84 @@ body::before {
   object-fit: cover;
 }
 
+/* ===== GLITCH NAME ===== */
 h2 {
+  position: relative;
   color: #00ffff;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  animation: flicker 1.5s infinite alternate;
 }
 
+h2::before,
+h2::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+h2::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  animation: glitchTop 1s infinite linear alternate-reverse;
+}
+
+h2::after {
+  left: -2px;
+  text-shadow: -2px 0 blue;
+  animation: glitchBottom 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitchTop {
+  0% { clip-path: inset(0 0 80% 0); }
+  50% { clip-path: inset(0 0 20% 0); }
+  100% { clip-path: inset(0 0 80% 0); }
+}
+
+@keyframes glitchBottom {
+  0% { clip-path: inset(80% 0 0 0); }
+  50% { clip-path: inset(20% 0 0 0); }
+  100% { clip-path: inset(80% 0 0 0); }
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+/* ===== BIO + ALERT ===== */
 .bio {
-  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0.8;
   margin-bottom: 20px;
 }
 
+.alert {
+  width: 22px;
+  height: 22px;
+  background: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 0 10px red;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 6px red; }
+  50% { transform: scale(1.2); box-shadow: 0 0 18px red; }
+  100% { transform: scale(1); box-shadow: 0 0 6px red; }
+}
+
+/* ===== BUTTONS ===== */
 .btn {
   display: block;
   margin: 12px 0;
@@ -129,14 +182,16 @@ h2 {
 <div class="main">
   <div class="card">
 
-    <div class="alert">!</div>
-
     <div class="avatar">
       <img src="https://wallpapers.com/images/hd/kakashi-pfp-no-signal-art-wvb4jpkd920auzp6.jpg">
     </div>
 
-    <h2>nvm7</h2>
-    <p class="bio">404 feelings not found</p>
+    <h2 data-text="nvm7">nvm7</h2>
+
+    <div class="bio">
+      <div class="alert">!</div>
+      404 feelings not found
+    </div>
 
     <a class="btn" href="#" target="_blank">Facebook</a>
     <a class="btn" href="#" target="_blank">Instagram</a>
@@ -147,4 +202,3 @@ h2 {
 
 </body>
 </html>
-
