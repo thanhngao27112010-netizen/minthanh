@@ -9,41 +9,28 @@
 body {
   margin: 0;
   font-family: 'Courier New', monospace;
-  background: linear-gradient(135deg, #0f1020, #1a1b2e);
+  background: #0a0f1f;
   overflow: hidden;
   color: #e0e0ff;
 }
 
-/* Background glow nhẹ */
-.bg-glow {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(120,0,255,0.15), transparent 60%);
-  animation: glowMove 8s infinite alternate;
-  z-index: 0;
-}
-
-@keyframes glowMove {
-  0% { transform: translateY(-20px); }
-  100% { transform: translateY(20px); }
-}
-
-/* Scanline nhẹ */
-body::after {
+/* CYBER GRID BACKGROUND */
+body::before {
   content: "";
   position: fixed;
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.02),
-    rgba(255,255,255,0.02) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  pointer-events: none;
-  z-index: 2;
+  background-image:
+    linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: moveGrid 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes moveGrid {
+  from { background-position: 0 0; }
+  to { background-position: 0 40px; }
 }
 
 /* MAIN */
@@ -57,23 +44,22 @@ body::after {
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
+  background: rgba(20, 20, 40, 0.85);
   padding: 40px;
   border-radius: 25px;
   text-align: center;
   width: 320px;
-  box-shadow: 0 0 40px rgba(120,0,255,0.4);
+  box-shadow: 0 0 40px rgba(0,255,255,0.3);
   position: relative;
 }
 
-/* DẤU CHẤM THANG */
+/* ALERT ❗ */
 .alert {
   position: absolute;
-  top: -15px;
-  right: -15px;
-  width: 40px;
-  height: 40px;
+  top: -18px;
+  right: -18px;
+  width: 45px;
+  height: 45px;
   background: red;
   border-radius: 50%;
   display: flex;
@@ -81,14 +67,15 @@ body::after {
   align-items: center;
   font-weight: bold;
   color: white;
-  box-shadow: 0 0 15px red;
-  animation: pulse 1.5s infinite;
+  font-size: 20px;
+  box-shadow: 0 0 20px red;
+  animation: pulse 1.2s infinite;
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 10px red; }
-  50% { box-shadow: 0 0 25px red; }
-  100% { box-shadow: 0 0 10px red; }
+  0% { transform: scale(1); box-shadow: 0 0 10px red; }
+  50% { transform: scale(1.15); box-shadow: 0 0 25px red; }
+  100% { transform: scale(1); box-shadow: 0 0 10px red; }
 }
 
 .avatar {
@@ -108,26 +95,9 @@ body::after {
   object-fit: cover;
 }
 
-/* Glitch nhẹ hơn */
 h2 {
-  position: relative;
-  color: white;
+  color: #00ffff;
   margin-bottom: 5px;
-}
-
-h2::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 2px;
-  top: 0;
-  color: #ff00cc;
-  opacity: 0.6;
-  animation: glitch 1s infinite alternate;
-}
-
-@keyframes glitch {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(2px); }
 }
 
 .bio {
@@ -141,7 +111,7 @@ h2::after {
   padding: 12px;
   border-radius: 12px;
   text-decoration: none;
-  background: linear-gradient(90deg, #5865F2, #7a5cff);
+  background: linear-gradient(90deg, #00c3ff, #3f5efb);
   color: white;
   font-weight: bold;
   transition: 0.3s;
@@ -149,14 +119,12 @@ h2::after {
 
 .btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 15px #7a5cff;
+  box-shadow: 0 0 15px #00c3ff;
 }
 </style>
 </head>
 
 <body>
-
-<div class="bg-glow"></div>
 
 <div class="main">
   <div class="card">
@@ -167,7 +135,7 @@ h2::after {
       <img src="https://wallpapers.com/images/hd/kakashi-pfp-no-signal-art-wvb4jpkd920auzp6.jpg">
     </div>
 
-    <h2 data-text="nvm7">nvm7</h2>
+    <h2>nvm7</h2>
     <p class="bio">404 feelings not found</p>
 
     <a class="btn" href="#" target="_blank">Facebook</a>
@@ -179,3 +147,4 @@ h2::after {
 
 </body>
 </html>
+
