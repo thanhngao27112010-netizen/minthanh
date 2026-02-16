@@ -14,6 +14,37 @@ body {
   color: #e0e0ff;
 }
 
+/* ===== INTRO ===== */
+.intro {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.typing {
+  font-size: 20px;
+  border-right: 2px solid #00ffcc;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+.skip {
+  margin-top: 20px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
 /* ===== BACKGROUND GRID ===== */
 body::before {
   content: "";
@@ -33,7 +64,6 @@ body::before {
   to { background-position: 0 45px; }
 }
 
-/* Glow trung tâm */
 body::after {
   content: "";
   position: fixed;
@@ -43,10 +73,10 @@ body::after {
   z-index: 1;
 }
 
-/* ===== MAIN CARD ===== */
+/* ===== MAIN ===== */
 .main {
   height: 100vh;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -62,7 +92,6 @@ body::after {
   box-shadow: 0 0 40px rgba(0,255,255,0.25);
 }
 
-/* ===== AVATAR ===== */
 .avatar {
   width: 120px;
   height: 120px;
@@ -152,12 +181,12 @@ h2::after {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 6px red; }
-  50% { transform: scale(1.2); box-shadow: 0 0 18px red; }
-  100% { transform: scale(1); box-shadow: 0 0 6px red; }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
-/* ===== BUTTONS ===== */
+/* ===== BUTTON ===== */
 .btn {
   display: block;
   margin: 12px 0;
@@ -179,9 +208,15 @@ h2::after {
 
 <body>
 
-<div class="main">
-  <div class="card">
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="typing" id="typing"></div>
+  <div class="skip">Press Enter to continue...</div>
+</div>
 
+<!-- MAIN -->
+<div class="main" id="main">
+  <div class="card">
     <div class="avatar">
       <img src="https://wallpapers.com/images/hd/kakashi-pfp-no-signal-art-wvb4jpkd920auzp6.jpg">
     </div>
@@ -193,12 +228,44 @@ h2::after {
       404 feelings not found
     </div>
 
-    <a class="btn" href="#" target="_blank">Facebook</a>
-    <a class="btn" href="#" target="_blank">Instagram</a>
-    <a class="btn" href="#" target="_blank">Spotify</a>
-
+    <a class="btn" href="#">Facebook</a>
+    <a class="btn" href="#">Instagram</a>
+    <a class="btn" href="#">Spotify</a>
   </div>
 </div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kai_Engel/Irsens_Tale/Kai_Engel_-_04_-_Moonlight_Reprise.mp3" type="audio/mp3">
+</audio>
+
+<script>
+const text = "Accessing nvm7 profile...";
+let i = 0;
+
+function typeWriter() {
+  if (i < text.length) {
+    document.getElementById("typing").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 40);
+  }
+}
+
+typeWriter();
+
+function enterSite() {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("main").style.display = "flex";
+  document.body.style.overflow = "auto";
+  document.getElementById("bgMusic").play();
+}
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") enterSite();
+});
+
+setTimeout(enterSite, 4000);
+</script>
 
 </body>
 </html>
