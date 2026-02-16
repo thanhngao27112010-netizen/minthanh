@@ -12,6 +12,37 @@ body {
   background: radial-gradient(circle at top, #2b2d42, #1a1b2e);
   overflow: hidden;
   color: #cfcfff;
+  animation: bgMove 12s infinite alternate;
+}
+
+@keyframes bgMove {
+  0% { background: radial-gradient(circle at top, #2b2d42, #1a1b2e); }
+  100% { background: radial-gradient(circle at bottom, #1a1b2e, #2b2d42); }
+}
+
+/* Scanlines */
+body::after {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Matrix Canvas */
+#matrix {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 /* INTRO */
@@ -51,6 +82,8 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 6;
 }
 
 .card {
@@ -79,24 +112,44 @@ body {
   object-fit: cover;
 }
 
+/* Glitch */
 h2 {
   position: relative;
   display: inline-block;
+  color: white;
 }
 
+h2::before,
 h2::after {
   content: attr(data-text);
   position: absolute;
-  left: 2px;
-  top: 0;
-  color: #ff4ecd;
-  z-index: -1;
-  opacity: 0.7;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
-.bio::before {
-  content: "! ";
-  color: #ff4ecd;
+h2::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  animation: glitchTop 1s infinite linear alternate-reverse;
+}
+
+h2::after {
+  left: -2px;
+  text-shadow: -2px 0 blue;
+  animation: glitchBottom 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitchTop {
+  0% { clip-path: inset(0 0 80% 0); }
+  50% { clip-path: inset(0 0 20% 0); }
+  100% { clip-path: inset(0 0 80% 0); }
+}
+
+@keyframes glitchBottom {
+  0% { clip-path: inset(80% 0 0 0); }
+  50% { clip-path: inset(20% 0 0 0); }
+  100% { clip-path: inset(80% 0 0 0); }
 }
 
 .bio {
@@ -121,87 +174,93 @@ h2::after {
   transform: scale(1.05);
 }
 </style>
-  body {
-  animation: bgMove 10s infinite alternate;
-}
-
-@keyframes bgMove {
-  0% { background: radial-gradient(circle at top, #2b2d42, #1a1b2e); }
-  100% { background: radial-gradient(circle at bottom, #1a1b2e, #2b2d42); }
-}
-
-/* Scanlines */
-body::after {
-  content: "";
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.03),
-    rgba(255,255,255,0.03) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  pointer-events: none;
-}
-
 </head>
 
 <body>
 
-<!-- INTRO -->
+<canvas id="matrix"></canvas>
+
 <div class="intro" id="intro">
   <h2 class="typing" id="typing"></h2>
   <div class="enter-text">Press Enter or wait...</div>
 </div>
 
-<!-- MAIN -->
 <div class="main" id="main">
   <div class="card">
     <div class="avatar">
       <img src="https://wallpapers.com/images/hd/kakashi-pfp-no-signal-art-wvb4jpkd920auzp6.jpg">
     </div>
 
-    <h2 data-text="! nvm7">! nvm7</h2>
+    <h2 data-text="nvm7">nvm7</h2>
     <p class="bio">404 feelings not found</p>
 
-    <a class="btn" href="https://www.facebook.com/profile.php?id=61572434173016" target="_blank">Facebook</a>
-    <a class="btn" href="https://www.instagram.com/minthanhh_2711/" target="_blank">Instagram</a>
-    <a class="btn" href="https://open.spotify.com/user/31sln3qa5a6bb547ihq6bzqevt6e" target="_blank">Spotify</a>
+    <a class="btn" href="#" target="_blank">Facebook</a>
+    <a class="btn" href="#" target="_blank">Instagram</a>
+    <a class="btn" href="#" target="_blank">Spotify</a>
   </div>
 </div>
 
+<audio id="bootSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
 <script>
+/* Typing */
 const text = "Accessing nvm7 profile...";
 let i = 0;
-const speed = 50;
-
 function typeWriter() {
   if (i < text.length) {
     document.getElementById("typing").innerHTML += text.charAt(i);
     i++;
-    setTimeout(typeWriter, speed);
+    setTimeout(typeWriter, 40);
   }
 }
-
 typeWriter();
 
-// Enter key skip
 document.addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    showMain();
-  }
+  if (event.key === "Enter") showMain();
 });
 
-// Auto after 3s
-setTimeout(showMain, 3000);
+setTimeout(showMain, 3500);
 
 function showMain() {
+  document.getElementById("bootSound").play();
   document.getElementById("intro").style.display = "none";
   document.getElementById("main").style.display = "flex";
   document.body.style.overflow = "auto";
 }
+
+/* MATRIX RAIN */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "01";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for(let x = 0; x < columns; x++)
+  drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#0f0";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i = 0; i < drops.length; i++) {
+    const text = letters.charAt(Math.floor(Math.random()*letters.length));
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+setInterval(draw, 33);
 </script>
 
 </body>
